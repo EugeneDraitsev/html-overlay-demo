@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import styled from 'styled-components/macro'
 import Draggable from 'react-draggable'
-import { Box, Button, Card, Typography } from '@material-ui/core'
+import { Box, Button, Card, IconButton, Typography } from '@material-ui/core'
 import elementPicker from 'element-picker'
+import CancelIcon from '@material-ui/icons/Cancel'
 
 const Content = styled(Card)`
   position: fixed;
@@ -19,6 +20,18 @@ const ElementsList = styled.div`
   max-height: 150px;
   overflow-y: auto;
   padding: 0 5px;
+`
+const ElementLine = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  max-width: 100%;
+  max-height: 30px;
+`
+const HTML = styled.div`
+  max-width: 230px;
+  max-height: 30px;
+  overflow: hidden;
 `
 
 const pickTypes = ['price', 'title', 'image'] as const
@@ -42,6 +55,10 @@ export const Picker = () => {
     })
   }
 
+  const onRemove = (index: number) => {
+    setPickedElements((elements) => elements.filter((_, i) => i !== index))
+  }
+
   return (
     <Draggable defaultPosition={{ x: 30, y: 30 }} scale={1} bounds="parent">
       <Content>
@@ -60,10 +77,13 @@ export const Picker = () => {
         Picked Elements:
         <ElementsList>
           {pickedElements.map((element, index) => (
-            <Typography key={index} noWrap>
+            <ElementLine key={index}>
               <strong>{element.pickType}: </strong>
-              <span>{element.outerHTML}</span>
-            </Typography>
+              <HTML>{element.outerHTML}</HTML>
+              <IconButton size="small" color="secondary" onClick={() => onRemove(index)}>
+                <CancelIcon />
+              </IconButton>
+            </ElementLine>
           ))}
         </ElementsList>
       </Content>

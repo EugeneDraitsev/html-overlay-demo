@@ -11,10 +11,12 @@
   },
   "dependencies": {
     "@material-ui/core": "^4.11.0",
+    "@material-ui/icons": "^4.9.1",
     "element-picker": "^1.0.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-draggable": "^4.4.3",
+    "react-shadow": "^18.4.2",
     "react-use": "^15.3.4",
     "styled-components": "^5.2.0"
   },

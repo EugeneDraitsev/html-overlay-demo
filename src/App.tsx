@@ -28,8 +28,6 @@ function App() {
     return `<style>${res.styleSheets}</style><div>${res.body}</div>`
   }, [url])
 
-  console.log(error)
-
   return (
     <Wrapper>
       <Picker />
