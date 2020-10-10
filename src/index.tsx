@@ -10,7 +10,7 @@ import * as serviceWorker from './serviceWorker'
 const theme = createMuiTheme()
 
 ReactDOM.render(
-  <React.StrictMode>
+  <>
     <ThemeProvider theme={theme}>
       <StylesProvider injectFirst>
         <CssBaseline />
@@ -19,7 +19,7 @@ ReactDOM.render(
         </StyledProvider>
       </StylesProvider>
     </ThemeProvider>
-  </React.StrictMode>,
+  </>,
   document.getElementById('root'),
 )
 

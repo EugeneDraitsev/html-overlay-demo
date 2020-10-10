@@ -1,61 +1,45 @@
-import React, { useState } from 'react'
+import React from 'react'
 import styled from 'styled-components/macro'
-import elementPicker from 'element-picker'
-import { Box, Button, Container, TextField } from '@material-ui/core'
+import { CircularProgress } from '@material-ui/core'
+import { useAsync, useSearchParam, useWindowSize } from 'react-use'
 
-const Wrapper = styled(Container)`
-  display: flex;
-  flex-direction: column;
-  justify-content: stretch;
+import { Picker } from './components'
+
+const Wrapper = styled.div`
+  min-height: 100vh;
 `
-const UrlForm = styled.form`
+const Content = styled.div`
   display: flex;
   align-items: center;
-  margin-top: 20px;
+  justify-content: center;
+  min-height: 100vh;
 `
-const Site = styled.object`
-  margin-top: 20px;
-  width: 100%;
-  height: calc(100vh - 100px);
-  border: 1px solid black;
-`
+
+const BASE_URL = 'http://localhost:4000'
 
 function App() {
-  const [url, setUrl] = useState('')
-  const [inputValue, setInputValue] = useState('test.html')
+  const url = useSearchParam('url')
+  const { width, height } = useWindowSize()
 
-  const onSubmit = (e: React.ChangeEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    setUrl(inputValue)
-    elementPicker.init({
-      onClick: (element: any) => {
-        console.log(element)
-      },
-    })
-  }
+  const { value, error, loading } = useAsync(async () => {
+    const res = await fetch(
+      `${BASE_URL}?url=${url}&width=${width}&height=${height * 3}`,
+    ).then((x) => x.json())
+    return `<style>${res.styleSheets}</style><div>${res.body}</div>`
+  }, [url])
+
+  console.log(error)
 
   return (
     <Wrapper>
-      <UrlForm onSubmit={onSubmit}>
-        <TextField
-          label="Url"
-          value={inputValue}
-          variant="outlined"
-          size="small"
-          fullWidth
-          onChange={(e) => setInputValue(e.target.value)}
-        />
-        <Box ml={2} />
-        <Button variant="contained" color="primary" type="submit">
-          Go
-        </Button>
-      </UrlForm>
-
-      {url && (
-        <Site data={url} type="text/html">
-          Alternative Content
-        </Site>
+      <Picker />
+      {error && <Content>{error.message}</Content>}
+      {loading && (
+        <Content>
+          <CircularProgress />
+        </Content>
       )}
+      {value && <div dangerouslySetInnerHTML={{ __html: value }} />}
     </Wrapper>
   )
 }
